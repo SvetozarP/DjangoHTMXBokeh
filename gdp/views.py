@@ -2,7 +2,7 @@ from bokeh.models import ColumnDataSource
 from bokeh.models.formatters import NumeralTickFormatter
 from bokeh.plotting import figure
 from bokeh.embed import components
-from django.db.models import Max
+from django.db.models import Max, Min
 from django.shortcuts import render
 import math
 from gdp.models import GDP
@@ -12,6 +12,7 @@ from gdp.models import GDP
 def index(request):
     # define the year for which we need data
     max_year = GDP.objects.aggregate(max_yr=Max('year'))['max_yr']
+    min_year = GDP.objects.aggregate(min_yr=Min('year'))['min_yr']
     year = request.GET.get('year', max_year)
 
     # define number of countries to fetch
@@ -24,7 +25,7 @@ def index(request):
 
     cds = ColumnDataSource(data=dict(country_names=country_names, country_gdps=country_gdps))
 
-    fig = figure(x_range=country_names, height=500, title=f'Top {count} GDPs ({year})',)
+    fig = figure(x_range=country_names, height=500, width=800, title=f'Top {count} GDPs ({year})',)
     fig.title.align = 'center'
     fig.title.text_font_size = '1.5em'
     fig.yaxis[0].formatter = NumeralTickFormatter(format='$0.0a')
@@ -37,6 +38,12 @@ def index(request):
     context = {
         'script': script,
         'div': div,
+        'years': range(min_year, max_year + 1),
+        'count': count,
+        'year_selected': year,
     }
+
+    if request.htmx:
+        return render(request, 'partials/gdp-bar.html', context)
 
     return render(request, 'index.html', context)
