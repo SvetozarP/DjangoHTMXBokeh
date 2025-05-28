@@ -1,9 +1,10 @@
 from bokeh.models import ColumnDataSource
+from bokeh.models.formatters import NumeralTickFormatter
 from bokeh.plotting import figure
 from bokeh.embed import components
 from django.db.models import Max
 from django.shortcuts import render
-
+import math
 from gdp.models import GDP
 
 
@@ -24,6 +25,11 @@ def index(request):
     cds = ColumnDataSource(data=dict(country_names=country_names, country_gdps=country_gdps))
 
     fig = figure(x_range=country_names, height=500, title=f'Top {count} GDPs ({year})',)
+    fig.title.align = 'center'
+    fig.title.text_font_size = '1.5em'
+    fig.yaxis[0].formatter = NumeralTickFormatter(format='$0.0a')
+    fig.xaxis.major_label_orientation = math.pi / 4
+
     fig.vbar(source=cds, x='country_names', top='country_gdps', width=0.8)
 
     script, div = components(fig)
