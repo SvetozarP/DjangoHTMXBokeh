@@ -1,5 +1,4 @@
-from bokeh.models import ColumnDataSource
-from bokeh.models.formatters import NumeralTickFormatter
+from bokeh.models import ColumnDataSource, NumeralTickFormatter, HoverTool
 from bokeh.plotting import figure
 from bokeh.embed import components
 from django.db.models import Max, Min
@@ -32,6 +31,11 @@ def index(request):
     fig.xaxis.major_label_orientation = math.pi / 4
 
     fig.vbar(source=cds, x='country_names', top='country_gdps', width=0.8)
+    tooltips = [
+        ('country_name', '@country_names'),
+        ('GDP', '@country_gdps{,}'),
+    ]
+    fig.add_tools(HoverTool(tooltips=tooltips))
 
     script, div = components(fig)
 
