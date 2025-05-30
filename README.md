@@ -7,4 +7,5 @@ Barchart with HTMX driven selectors for year and number of countries to display
 
 Added a line chart, displaying GDP by country and a multiline chart for 3 countries.
 
-![image](https://github.com/user-attachments/assets/a865e7b6-4144-40db-8fed-99cc15b1ffdc)
+![image](https://github.com/user-attachments/assets/c9390114-358d-40d4-8e33-ebef82f2cdb1)
+
