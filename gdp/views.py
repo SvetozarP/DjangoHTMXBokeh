@@ -78,7 +78,12 @@ def line(request):
 
     # Multiline
 
-    cds_ml = ColumnDataSource(data=dict(country_years=year_data, country_gdps=gdp_data))
+    cds_ml = ColumnDataSource(data=dict(
+        country_years=year_data,
+        country_gdps=gdp_data,
+        names=co,
+        colors=['red', 'green', 'blue'],
+    ))
 
     # end of Multiline
 
@@ -87,7 +92,12 @@ def line(request):
     fig.title.text_font_size = '1.5em'
     fig.yaxis[0].formatter = NumeralTickFormatter(format='$0.0a')
 
-    fig.line(source=cds, x='country_years', y='country_gdps', line_width=2)
+    fig.line(
+        source=cds,
+        x='country_years',
+        y='country_gdps',
+        line_width=2,
+    )
 
     # Multiline
 
@@ -96,7 +106,15 @@ def line(request):
     fig2.title.text_font_size = '1.5em'
     fig2.yaxis[0].formatter = NumeralTickFormatter(format='$0.0a')
 
-    fig2.multi_line(source=cds_ml, xs='country_years', ys='country_gdps', line_width=2)
+    fig2.multi_line(
+        source=cds_ml,
+        xs='country_years',
+        ys='country_gdps',
+        line_width=2,
+        legend_group='names',
+        line_color='colors'
+    )
+    fig2.legend.location = "top_left"
 
     script1, div1 = components(fig2)
     # end of multiline
